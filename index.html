@@ -1,19 +1,20 @@
 <?php
 /**
- * Archivo principal: index.php
- * Descripción: Estructura en PHP puro, escalable, con componentes 3D, 
- * diseño moderno y botones de contacto optimizados para conversión.
+ * Archivo: index.php
+ * Descripción: Estructura web completa en PHP y HTML integrado. 
+ * El bloque PHP inicial maneja configuraciones y datos globales para mantener la escalabilidad.
  */
 
-// Configuración de datos de contacto y metadatos (Facilita la escalabilidad y mantenimiento)
+// Datos de configuración centralizados (Fácil de escalar o conectar a base de datos en el futuro)
 $config = [
     'sitio_nombre' => 'OSCIDEC',
-    'slogan' => 'Innovación, Seguridad y Desarrollo Tecnológico 3D',
+    'slogan' => 'Ingeniería de Software, Ciberseguridad y Experiencias 3D',
     'email_contacto' => 'contacto@oscidec.com',
     'pais_codigo' => '+507',
     'telefono_crudo' => '67600882',
-    'whatsapp_url' => 'https://wa.me/50767600882?text=Hola,%20me%20gustaría%20más%20información%20sobre%20sus%20servicios.',
-    'telegram_url' => 'https://t.me/67600882'
+    'whatsapp_url' => 'https://wa.me/50767600882?text=Hola,%20estoy%20interesado%20en%20sus%20servicios%20tecnológicos.',
+    'telegram_url' => 'https://t.me/67600882',
+    'anio_actual' => date('Y')
 ];
 ?>
 <!DOCTYPE html>
@@ -21,25 +22,27 @@ $config = [
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $config['sitio_nombre']; ?> - Experiencias Digitales</title>
+    <title><?php echo $config['sitio_nombre']; ?> - Soluciones Tecnológicas Avanzadas</title>
     
-    <!-- Librerías Externas opcionales vía CDN para enriquecer efectos (Escalabilidad de JS/CSS) -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- Librerías Externas CSS (Tipografía y Iconos) -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* ==========================================
-           ESTILOS CSS / DISEÑO 3D Y ESCALABILIDAD
-           ========================================== */
+        /* ==========================================================
+           ESTILOS CSS: DISEÑO MODERNO, EFECTOS 3D Y ESCALABILIDAD
+           ========================================================== */
         :root {
-            --bg-color: #0b0f19;
+            --bg-base: #07090e;
+            --bg-surface: #0f172a;
             --card-bg: rgba(255, 255, 255, 0.03);
             --border-color: rgba(255, 255, 255, 0.08);
-            --primary-glow: #6366f1;
-            --secondary-glow: #a855f7;
-            --text-color: #f3f4f6;
-            --whatsapp-color: #25d366;
-            --telegram-color: #0088cc;
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.3);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --whatsapp: #25d366;
+            --telegram: #0088cc;
         }
 
         * {
@@ -47,102 +50,150 @@ $config = [
             margin: 0;
             padding: 0;
             font-family: 'Outfit', sans-serif;
+            scroll-behavior: smooth;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background-color: var(--bg-base);
+            color: var(--text-main);
             overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- NAVEGACIÓN --- */
+        header.navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background: rgba(7, 9, 14, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+        }
+
+        .nav-logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #fff 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: var(--text-main);
+        }
+
+        /* --- SECCIÓN HERO (PRINCIPAL) --- */
+        .hero {
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-        }
-
-        /* Contenedor principal con perspectiva 3D */
-        .main-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            width: 100%;
-            perspective: 1000px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            flex-grow: 1;
             justify-content: center;
-        }
-
-        header {
+            align-items: center;
             text-align: center;
-            margin-bottom: 50px;
-            transform: translateZ(30px);
-            transition: transform 0.5s ease;
+            padding: 140px 20px 80px 20px;
+            background: radial-gradient(circle at center, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
         }
 
-        header h1 {
-            font-size: 3.5rem;
+        .hero h1 {
+            font-size: 3.8rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+            max-width: 900px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
         }
 
-        header p {
-            font-size: 1.2rem;
-            color: #94a3b8;
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 650px;
+            margin-bottom: 50px;
         }
 
-        /* Tarjeta con efecto 3D Interactivo */
-        .card-3d-wrapper {
+        /* --- TARJETA 3D INTERACTIVA DE CONTACTO --- */
+        .card-3d-container {
+            perspective: 1000px;
             width: 100%;
             max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .card-3d {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 24px;
-            padding: 40px;
-            backdrop-filter: blur(16px);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            padding: 45px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
             transform-style: preserve-3d;
             transition: transform 0.1s ease, border-color 0.3s ease;
-            margin-bottom: 40px;
         }
 
-        .card-3d-wrapper:hover {
+        .card-3d:hover {
             border-color: rgba(99, 102, 241, 0.4);
         }
 
         .card-content {
-            transform: translateZ(40px);
+            transform: translateZ(30px);
         }
 
-        .card-content h2 {
+        .card-content h3 {
             font-size: 1.8rem;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            text-align: left;
             color: #fff;
         }
 
-        .info-list {
+        .contact-info-list {
             list-style: none;
-            margin-bottom: 30px;
+            margin-bottom: 35px;
+            text-align: left;
         }
 
-        .info-list li {
-            margin-bottom: 12px;
+        .contact-info-list li {
+            margin-bottom: 15px;
             font-size: 1.1rem;
             display: flex;
             align-items: center;
-            gap: 12px;
-            color: #cbd5e1;
+            gap: 15px;
+            color: var(--text-muted);
         }
 
-        .info-list li i {
-            color: var(--primary-glow);
+        .contact-info-list li i {
+            color: var(--primary);
+            font-size: 1.2rem;
+            width: 25px;
+            text-align: center;
         }
 
-        /* Contenedor de Botones de Contacto (WhatsApp / Telegram) */
-        .cta-buttons {
+        .contact-info-list li span {
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        /* Botones de Acción Directa (WhatsApp & Telegram) */
+        .btn-group {
             display: flex;
             gap: 15px;
             flex-wrap: wrap;
@@ -151,7 +202,7 @@ $config = [
         .btn {
             flex: 1;
             min-width: 200px;
-            padding: 14px 24px;
+            padding: 15px 24px;
             border-radius: 12px;
             font-weight: 600;
             text-decoration: none;
@@ -159,102 +210,199 @@ $config = [
             align-items: center;
             justify-content: center;
             gap: 10px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
             font-size: 1rem;
-            color: white;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            color: #fff;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
         .btn:hover {
             transform: translateY(-3px);
         }
 
-        .btn-whatsapp {
-            background-color: var(--whatsapp-color);
+        .btn-wa {
+            background-color: var(--whatsapp);
         }
-        .btn-whatsapp:hover {
+        .btn-wa:hover {
             box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
         }
 
-        .btn-telegram {
-            background-color: var(--telegram-color);
+        .btn-tg {
+            background-color: var(--telegram);
         }
-        .btn-telegram:hover {
+        .btn-tg:hover {
             box-shadow: 0 6px 20px rgba(0, 136, 204, 0.4);
         }
 
-        footer {
+        /* --- SECCIONES DE CONTENIDO EXPANDIBLE (Escalabilidad) --- */
+        .section {
+            padding: 100px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
             text-align: center;
-            padding: 20px;
-            color: #64748b;
-            font-size: 0.9rem;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .grid-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-box {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            padding: 40px 30px;
+            border-radius: 20px;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .feature-box:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .feature-box i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .feature-box h4 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-box p {
+            color: var(--text-muted);
+        }
+
+        /* --- PIE DE PÁGINA --- */
+        footer {
+            background: rgba(4, 6, 10, 0.95);
             border-top: 1px solid var(--border-color);
-            background: rgba(0,0,0,0.2);
+            padding: 40px 5%;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        footer p span {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .nav-menu { display: none; }
         }
     </style>
 </head>
 <body>
 
-    <div class="main-container">
-        
-        <header>
-            <h1><?php echo htmlspecialchars($config['sitio_nombre']); ?></h1>
-            <p><?php echo htmlspecialchars($config['slogan']); ?></p>
-        </header>
+    <!-- Barra de Navegación -->
+    <header class="navbar">
+        <div class="nav-logo"><?php echo htmlspecialchars($config['sitio_nombre']); ?></div>
+        <ul class="nav-menu">
+            <li><a href="#inicio">Inicio</a></li>
+            <li><a href="#capacidades">Capacidades</a></li>
+            <li><a href="#contacto-seccion">Contacto</a></li>
+        </ul>
+    </header>
 
-        <!-- Tarjeta Interactiva 3D -->
-        <div class="card-3d-wrapper" id="card3D">
-            <div class="card-content">
-                <h2>Conectemos Directamente</h2>
-                <ul class="info-list">
-                    <li>
-                        <i class="fa-solid fa-envelope"></i> 
-                        <span><?php echo htmlspecialchars($config['email_contacto']); ?></span>
-                    </li>
-                    <li>
-                        <i class="fa-solid fa-phone"></i> 
-                        <span><?php echo htmlspecialchars($config['pais_codigo'] . ' ' . $config['telefono_crudo']); ?></span>
-                    </li>
-                    <li>
-                        <i class="fa-solid fa-globe"></i> 
-                        <span>Panamá / Global (Escalable y Adaptativo)</span>
-                    </li>
-                </ul>
+    <!-- Sección Principal (Hero) con la Tarjeta 3D Interactiva -->
+    <main id="inicio" class="hero">
+        <h1><?php echo htmlspecialchars($config['sitio_nombre']); ?></h1>
+        <p><?php echo htmlspecialchars($config['slogan']); ?></p>
 
-                <!-- Botones de Acción (WhatsApp y Telegram) -->
-                <div class="cta-buttons">
-                    <a href="<?php echo htmlspecialchars($config['whatsapp_url']); ?>" target="_blank" class="btn btn-whatsapp">
-                        <i class="fa-brands fa-whatsapp fa-lg"></i> WhatsApp
-                    </a>
-                    <a href="<?php echo htmlspecialchars($config['telegram_url']); ?>" target="_blank" class="btn btn-telegram">
-                        <i class="fa-brands fa-telegram fa-lg"></i> Telegram
-                    </a>
+        <div class="card-3d-container">
+            <div class="card-3d" id="interactiveCard">
+                <div class="card-content">
+                    <h3>Canales Oficiales</h3>
+                    <ul class="contact-info-list">
+                        <li>
+                            <i class="fa-solid fa-envelope"></i>
+                            <span><?php echo htmlspecialchars($config['email_contacto']); ?></span>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-phone"></i>
+                            <span><?php echo htmlspecialchars($config['pais_codigo'] . ' ' . $config['telefono_crudo']); ?> (Panamá)</span>
+                        </li>
+                        <li>
+                            <i class="fa-solid fa-shield-halved"></i>
+                            <span>Sistemas Escalables & Estructura PHP Pura</span>
+                        </li>
+                    </ul>
+
+                    <!-- Botones de WhatsApp y Telegram solicitados -->
+                    <div class="btn-group">
+                        <a href="<?php echo htmlspecialchars($config['whatsapp_url']); ?>" target="_blank" class="btn btn-wa">
+                            <i class="fa-brands fa-whatsapp fa-lg"></i> WhatsApp (+507)
+                        </a>
+                        <a href="<?php echo htmlspecialchars($config['telegram_url']); ?>" target="_blank" class="btn btn-telegram btn-tg">
+                            <i class="fa-brands fa-telegram fa-lg"></i> Telegram (+507)
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
+    </main>
 
-    </div>
+    <!-- Sección de Capacidades (Para asegurar que tenga bastante contenido visual) -->
+    <section id="capacidades" class="section">
+        <div class="section-header">
+            <h2>Arquitectura y Escalabilidad</h2>
+            <p>Diseñado bajo estándares rigurosos de rendimiento y seguridad tecnológica.</p>
+        </div>
+        <div class="grid-features">
+            <div class="feature-box">
+                <i class="fa-solid fa-code"></i>
+                <h4>PHP Puro Modular</h4>
+                <p>Estructuras limpias y sin dependencias bloated, permitiendo un tiempo de carga casi instantáneo y fácil mantenimiento a largo plazo.</p>
+            </div>
+            <div class="feature-box">
+                <i class="fa-solid fa-cube"></i>
+                <h4>Efectos Visuales 3D</h4>
+                <p>Interfaces altamente atractivas que responden dinámicamente al movimiento del cursor, logrando enganchar al usuario de inmediato.</p>
+            </div>
+            <div class="feature-box">
+                <i class="fa-solid fa-comments"></i>
+                <h4>Conversión Directa</h4>
+                <p>Enlaces optimizados hacia aplicaciones de mensajería instantánea con prefijos internacionales directos desde Panamá (+507).</p>
+            </div>
+        </div>
+    </section>
 
-    <footer>
-        <p>&copy; <?php echo date('Y'); ?> <?php echo htmlspecialchars($config['sitio_nombre']); ?>. Todos los derechos reservados.</p>
+    <!-- Pie de página -->
+    <footer id="contacto-seccion">
+        <p>&copy; <?php echo $config['anio_actual']; ?> <span><?php echo htmlspecialchars($config['sitio_nombre']); ?></span>. Todos los derechos reservados. | Correo: <?php echo htmlspecialchars($config['email_contacto']); ?></p>
     </footer>
 
-    <!-- ==========================================
-       JAVASCRIPT / INTERACTIVIDAD 3D Y LIBRERÍAS
-       ========================================== -->
+    <!-- JavaScript para el efecto 3D dinámico del cursor -->
     <script>
-        // Efecto de inclinación 3D dinámico basado en el movimiento del mouse sobre la tarjeta
-        const card = document.getElementById('card3D');
+        const card = document.getElementById('interactiveCard');
 
         document.addEventListener('mousemove', (e) => {
-            const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
-            const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
-            
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 35;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 35;
             card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
         });
 
-        // Restablecer posición cuando el mouse sale de la ventana
         document.addEventListener('mouseleave', () => {
             card.style.transform = `rotateY(0deg) rotateX(0deg)`;
             card.style.transition = 'transform 0.5s ease';
