@@ -1,250 +1,574 @@
-<!DOCTYPE html>
-<html lang="es" class="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OSCIDEC - Experiencias Inmersivas y Escalables</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        darkBg: '#030712',
-                        cardBg: '#111827',
-                        accentPurple: '#8b5cf6',
-                        accentBlue: '#3b82f6'
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- Google Fonts Inter & Outfit -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-    <!-- FontAwesome para iconos -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!doctype html>
+<html lang="es">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkyWings Travel - Agencia de Viajes y Experiencias Globales</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Fraunces:opsz,wght@9..144,600;9..144,700&amp;display=swap" rel="stylesheet">
+  <style>
+    :root { --sky: #0284c7; --deep-sky: #0369a1; --ink: #082f49; --mist: #f0f9ff; }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: "DM Sans", sans-serif; color: var(--ink); overflow-x: hidden; }
+    .display-font { font-family: "Fraunces", serif; }
+    .nav-glass { background: rgba(255,255,255,.94); backdrop-filter: blur(14px); }
+    .hero-wash { background: linear-gradient(105deg, rgba(3, 41, 66, .93) 0%, rgba(3, 105, 161, .75) 50%, rgba(2, 132, 199, .25) 100%); }
+    .search-panel { box-shadow: 0 24px 65px rgba(3, 105, 161, .22); }
     
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #030712;
-            color: #f3f4f6;
-            overflow-x: hidden;
-        }
-        h1, h2, h3, .font-outfit {
-            font-family: 'Outfit', sans-serif;
-        }
-        /* Fondo con brillo difuso */
-        .bg-glow {
-            position: absolute;
-            width: 700px;
-            height: 700px;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.18) 0%, rgba(59, 130, 246, 0.06) 50%, transparent 70%);
-            top: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 0;
-            pointer-events: none;
-        }
-        /* Contenedor 3D Perspective */
-        .perspective-container {
-            perspective: 1200px;
-        }
-        .card-3d {
-            transition: transform 0.1s ease-out, box-shadow 0.3s ease;
-            transform-style: preserve-3d;
-        }
-        /* Animación de entrada suave */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-    </style>
-</head>
-<body class="relative selection:bg-accentPurple selection:text-white">
+    /* Efectos 3D y Framer-style transitions mejorados */
+    .perspective-container { perspective: 1400px; }
+    .card-3d { 
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+    .card-3d:hover {
+      transform: translateY(-12px) rotateX(4deg) rotateY(-4deg);
+      box-shadow: 0 35px 70px rgba(3, 105, 161, 0.25);
+    }
+    
+    .scroll-reveal {
+      opacity: 0;
+      transform: translateY(35px);
+      transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .scroll-reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-    <!-- Fondo con brillo difuso -->
-    <div class="bg-glow"></div>
+    input, textarea, select { outline: none; }
+    input:focus, textarea:focus, select:focus { border-color: var(--sky); box-shadow: 0 0 0 3px rgba(2,132,199,.15); }
+    button:focus-visible, a:focus-visible { outline: 3px solid #38bdf8; outline-offset: 3px; }
+  </style>
+ </head>
+ <body class="w-full bg-slate-50">
+  
+  <!-- BARRA DE NAVEGACIÓN -->
+  <header class="sticky top-0 z-50 w-full border-b border-sky-100 nav-glass">
+   <nav class="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8" aria-label="Navegación principal">
+    <a href="#inicio" class="flex items-center gap-3 group" aria-label="SkyWings Travel, inicio">
+     <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-600 text-white shadow-lg shadow-sky-200 transition group-hover:scale-105">
+      <i data-lucide="plane" width="21" height="21"></i>
+     </span>
+     <span class="text-lg font-bold tracking-tight text-sky-950">SkyWings Travel</span>
+    </a>
+    <div class="hidden items-center gap-7 lg:flex">
+     <a class="text-sm font-semibold transition hover:text-sky-600 text-sky-900" href="#destinos">Destinos</a>
+     <a class="text-sm font-semibold transition hover:text-sky-600 text-sky-900" href="#vuelos">Vuelos</a>
+     <a class="text-sm font-semibold transition hover:text-sky-600 text-sky-900" href="#experiencias">Experiencias</a>
+     <a class="text-sm font-semibold transition hover:text-sky-600 text-sky-900" href="#guias">Guías de Viaje</a>
+     <a class="text-sm font-semibold transition hover:text-sky-600 text-sky-900" href="#promociones">Ventajas</a>
+     <a class="rounded-full bg-sky-600 px-5 py-2.5 text-sm font-bold text-white shadow-md shadow-sky-200 transition hover:bg-sky-700 hover:-translate-y-0.5" href="#contacto">Contacto</a>
+    </div>
+    <button id="menu-toggle" type="button" class="rounded-lg p-2 text-sky-900 lg:hidden" aria-label="Abrir menú" aria-expanded="false">
+     <i data-lucide="menu" width="24" height="24"></i>
+    </button>
+   </nav>
+   <div id="mobile-menu" class="hidden border-t border-sky-100 bg-white px-5 py-4 lg:hidden shadow-lg">
+    <div class="flex flex-col gap-3">
+     <a class="rounded-lg px-3 py-2 font-semibold text-sky-900 hover:bg-sky-50" href="#destinos">Destinos</a>
+     <a class="rounded-lg px-3 py-2 font-semibold text-sky-900 hover:bg-sky-50" href="#vuelos">Vuelos</a>
+     <a class="rounded-lg px-3 py-2 font-semibold text-sky-900 hover:bg-sky-50" href="#experiencias">Experiencias</a>
+     <a class="rounded-lg px-3 py-2 font-semibold text-sky-900 hover:bg-sky-50" href="#guias">Guías de Viaje</a>
+     <a class="rounded-lg px-3 py-2 font-semibold text-sky-900 hover:bg-sky-50" href="#promociones">Ventajas</a>
+     <a class="rounded-lg bg-sky-600 px-3 py-2.5 font-bold text-white text-center" href="#contacto">Contacto</a>
+    </div>
+   </div>
+  </header>
 
-    <!-- Barra de Navegación -->
-    <nav class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-darkBg/80 border-b border-gray-800/50">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-accentPurple to-accentBlue flex items-center justify-center shadow-lg shadow-purple-500/30">
-                    <i class="fa-solid fa-shield-halved text-white text-lg"></i>
-                </div>
-                <span class="font-outfit text-2xl font-bold tracking-tight bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">OSCIDEC</span>
-            </div>
-            <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-300">
-                <a href="#inicio" class="hover:text-accentPurple transition-colors">Inicio</a>
-                <a href="#ecosistema" class="hover:text-accentPurple transition-colors">Ecosistema</a>
-                <a href="#experiencia-3d" class="hover:text-accentPurple transition-colors">Laboratorio 3D</a>
-                <a href="#contacto" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-accentPurple to-accentBlue text-white font-semibold shadow-lg shadow-purple-600/20 hover:opacity-90 transition-opacity">Contacto Directo</a>
-            </div>
+  <main>
+   <!-- HERO & BUSCADOR 3D -->
+   <section id="inicio" class="relative isolate flex min-h-[700px] items-center overflow-hidden py-16">
+    <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=1920&auto=format&fit=crop" loading="lazy" alt="Avión volando sobre nubes" class="absolute inset-0 -z-20 h-full w-full object-cover saturate-75">
+    <div class="hero-wash absolute inset-0 -z-10"></div>
+    
+    <div class="mx-auto w-full max-w-7xl px-5 lg:px-8">
+     <div class="max-w-3xl">
+      <div class="inline-flex items-center gap-2 mb-5 rounded-full bg-sky-500/30 px-4 py-2 text-sm font-bold tracking-wide text-white backdrop-blur-md border border-white/20">
+       <i data-lucide="sparkles" width="16" height="16"></i> Descubre el mundo con diseño y seguridad
+      </div>
+      <h1 class="display-font font-bold leading-[1.08] text-white text-4xl sm:text-6xl lg:text-7xl">Tu próxima gran aventura comienza aquí</h1>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-sky-100">Explora rutas exclusivas, cotiza vuelos al instante y vive experiencias inolvidables diseñadas con la máxima precisión.</p>
+     </div>
+
+     <!-- Buscador interactivo -->
+     <div id="vuelos" class="search-panel scroll-reveal mt-12 rounded-3xl bg-white/95 backdrop-blur-xl p-5 sm:p-8 border border-white/50">
+      <div class="mb-6 flex items-center gap-3">
+       <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-sky-100 text-sky-700 shadow-inner">
+        <i data-lucide="search" width="22" height="22"></i>
+       </span>
+       <div>
+        <h2 class="font-bold text-sky-950 text-xl">Buscador Inteligente de Vuelos</h2>
+        <p class="text-sm text-sky-700">Compara tarifas de cientos de aerolíneas en tiempo real</p>
+       </div>
+      </div>
+      <form id="flight-form" class="grid gap-4 lg:grid-cols-[1.2fr_1.2fr_1fr_1fr_.9fr_auto] lg:items-end">
+       <div>
+        <label class="mb-2 block text-sm font-bold text-sky-900" for="origin">Ciudad de Origen</label>
+        <div class="relative">
+         <i data-lucide="map-pin" class="absolute left-3.5 top-3.5 text-sky-600" width="18" height="18"></i>
+         <input id="origin" required type="text" class="w-full rounded-xl border border-sky-200 bg-white py-3.5 pl-10 pr-3 text-sm text-sky-950 font-medium" placeholder="Ej. Ciudad de Panamá">
         </div>
-    </nav>
-
-    <!-- Hero Section con Parallax 3D -->
-    <section id="inicio" class="relative min-h-screen flex items-center justify-center pt-24 pb-16 px-6 z-10">
-        <div class="max-w-5xl mx-auto text-center animate-fade-in">
-            <div class="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-gray-900 border border-gray-800 text-xs text-purple-400 mb-6 shadow-inner">
-                <span class="w-2 h-2 rounded-full bg-accentPurple animate-pulse"></span>
-                <span>Tecnología, Innovación y Ciberseguridad Avanzada</span>
-            </div>
-            <h1 class="font-outfit text-5xl md:text-7xl font-extrabold tracking-tight mb-8 leading-tight">
-                Experiencias Inmersivas <br>
-                <span class="bg-gradient-to-r from-accentPurple via-indigo-400 to-accentBlue bg-clip-text text-transparent">Escalables y Seguras</span>
-            </h1>
-            <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-10 font-light">
-                Diseños digitales de alto rendimiento con entornos tridimensionales interactivos diseñados para capturar la atención y enganchar a tu audiencia desde el primer instante.
-            </p>
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="#experiencia-3d" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-white text-darkBg font-bold hover:bg-gray-100 transition-all shadow-xl shadow-white/5 flex items-center justify-center space-x-3 group">
-                    <span>Probar Laboratorio 3D</span>
-                    <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
-                </a>
-                <a href="#contacto" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gray-900 border border-gray-800 text-white font-medium hover:bg-gray-800 transition-all">
-                    Iniciar Conversación
-                </a>
-            </div>
+       </div>
+       <div>
+        <label class="mb-2 block text-sm font-bold text-sky-900" for="destination">Destino Soñado</label>
+        <div class="relative">
+         <i data-lucide="navigation" class="absolute left-3.5 top-3.5 text-sky-600" width="18" height="18"></i>
+         <input id="destination" required type="text" class="w-full rounded-xl border border-sky-200 bg-white py-3.5 pl-10 pr-3 text-sm text-sky-950 font-medium" placeholder="¿A dónde quieres ir?">
         </div>
-    </section>
+       </div>
+       <div>
+        <label class="mb-2 block text-sm font-bold text-sky-900" for="departure">Fecha de Ida</label>
+        <input id="departure" required type="date" class="w-full rounded-xl border border-sky-200 bg-white px-3 py-3.5 text-sm text-sky-950 font-medium">
+       </div>
+       <div>
+        <label class="mb-2 block text-sm font-bold text-sky-900" for="return-date">Fecha de Vuelta</label>
+        <input id="return-date" required type="date" class="w-full rounded-xl border border-sky-200 bg-white px-3 py-3.5 text-sm text-sky-950 font-medium">
+       </div>
+       <div>
+        <label class="mb-2 block text-sm font-bold text-sky-900" for="passengers">Pasajeros</label>
+        <select id="passengers" class="w-full rounded-xl border border-sky-200 bg-white px-3 py-3.5 text-sm text-sky-950 font-medium">
+         <option>1 pasajero</option>
+         <option>2 pasajeros</option>
+         <option>3 pasajeros</option>
+         <option>4+ pasajeros</option>
+        </select>
+       </div>
+       <button type="submit" class="flex h-[48px] items-center justify-center gap-2 rounded-xl bg-sky-600 px-6 font-bold text-white shadow-lg shadow-sky-600/30 transition hover:bg-sky-700 hover:-translate-y-0.5">
+        <i data-lucide="plane-takeoff" width="18" height="18"></i>
+        <span>Buscar Vuelos</span>
+       </button>
+      </form>
+      <div id="flight-result" class="mt-5 hidden rounded-xl border border-sky-200 bg-sky-50 px-4 py-3.5 text-sm text-sky-900 font-medium" role="status"></div>
+      <div id="flight-error" class="mt-5 hidden rounded-xl border border-red-200 bg-red-50 px-4 py-3.5 text-sm text-red-700 font-medium" role="alert"></div>
+     </div>
+    </div>
+   </section>
 
-    <!-- Sección Interactiva 3D con Mouse Tracking (Laboratorio 3D) -->
-    <section id="experiencia-3d" class="py-24 px-6 relative z-10">
-        <div class="max-w-6xl mx-auto">
-            <div class="text-center mb-16">
-                <h2 class="font-outfit text-3xl md:text-5xl font-bold mb-4">Interacción Tridimensional en Tiempo Real</h2>
-                <p class="text-gray-400 max-w-xl mx-auto">Desplaza el cursor sobre el módulo central para experimentar la perspectiva volumétrica dinámica.</p>
-            </div>
+   <!-- SECCIÓN DE DESTINOS POPULARES (Tarjetas 3D) -->
+   <section id="destinos" class="w-full bg-white py-24">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+     <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end scroll-reveal">
+      <div class="max-w-xl">
+       <p class="mb-3 text-sm font-bold uppercase tracking-[.18em] text-sky-600">Exploración mundial</p>
+       <h2 class="display-font font-bold text-3xl text-sky-950 sm:text-4xl">Destinos recomendados para ti</h2>
+      </div>
+      <p class="max-w-md leading-relaxed text-slate-600">Seleccionamos los rincones más fascinantes del planeta con paquetes completos de vuelo, hotel y tours guiados.</p>
+     </div>
 
-            <div class="perspective-container flex justify-center">
-                <div id="interactive-card" class="card-3d w-full max-w-2xl bg-gradient-to-br from-cardBg to-gray-900 border border-gray-800/80 rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
-                    <!-- Resplandor interno animado -->
-                    <div class="absolute -right-20 -top-20 w-60 h-60 bg-purple-500/15 rounded-full blur-3xl pointer-events-none"></div>
-                    
-                    <div class="flex items-center justify-between mb-8">
-                        <div class="w-14 h-14 rounded-2xl bg-accentPurple/20 border border-accentPurple/30 flex items-center justify-center text-accentPurple text-2xl">
-                            <i class="fa-solid fa-cubes"></i>
-                        </div>
-                        <span class="text-xs font-mono uppercase tracking-widest text-gray-400 bg-gray-800/80 px-3 py-1.5 rounded-lg border border-gray-700/50">Módulo Parallax Activo</span>
-                    </div>
-
-                    <h3 class="font-outfit text-2xl md:text-3xl font-bold mb-4 text-white">Arquitectura Visual de Alto Impacto</h3>
-                    <p class="text-gray-400 text-sm md:text-base leading-relaxed mb-8">
-                        La combinación de estructuras visuales tridimensionales y transiciones fluidas incrementa de forma directa el tiempo de permanencia del usuario, transformando visitantes casuales en clientes comprometidos.
-                    </p>
-
-                    <div class="grid grid-cols-2 gap-4 border-t border-gray-800 pt-6">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 rounded-lg bg-purple-500/10 text-accentPurple flex items-center justify-center text-sm">
-                                <i class="fa-solid fa-gauge-high"></i>
-                            </div>
-                            <span class="text-sm font-medium text-gray-300">60 FPS Fluidos</span>
-                        </div>
-                        <div class="flex items-center space-x-3">
-                            <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-accentBlue flex items-center justify-center text-sm">
-                                <i class="fa-solid fa-shield"></i>
-                            </div>
-                            <span class="text-sm font-medium text-gray-300">Seguridad Integrada</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+     <div class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4 perspective-container">
+      <!-- París -->
+      <article class="card-3d overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-xl shadow-slate-200/50 flex flex-col justify-between scroll-reveal">
+       <div>
+        <div class="h-60 overflow-hidden relative">
+         <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?q=80&w=800&auto=format&fit=crop" loading="lazy" alt="París" class="h-full w-full object-cover transition duration-500 hover:scale-110">
+         <span class="absolute top-4 right-4 rounded-full bg-white/90 backdrop-blur-md px-3 py-1 text-xs font-bold text-sky-900 shadow">Europa</span>
         </div>
-    </section>
-
-    <!-- Sección de Ecosistema Tecnológico -->
-    <section id="ecosistema" class="py-24 px-6 relative z-10 bg-gray-900/30 border-y border-gray-800/40">
-        <div class="max-w-6xl mx-auto">
-            <div class="text-center mb-16">
-                <h2 class="font-outfit text-3xl md:text-5xl font-bold mb-4">Ecosistema y Pilares</h2>
-                <p class="text-gray-400 max-w-xl mx-auto">Componentes clave que potencian la escalabilidad y el enganche de tu plataforma.</p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Columna 1 -->
-                <div class="bg-cardBg border border-gray-800/80 p-8 rounded-3xl hover:border-accentPurple/50 transition-all group">
-                    <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-accentPurple flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-network-wired"></i>
-                    </div>
-                    <h3 class="font-outfit text-xl font-bold mb-3 text-white">Infraestructura Robusta</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        Sistemas optimizados para garantizar alta disponibilidad, tiempos de respuesta mínimos y rendimiento constante.
-                    </p>
-                </div>
-                <!-- Columna 2 -->
-                <div class="bg-cardBg border border-gray-800/80 p-8 rounded-3xl hover:border-accentBlue/50 transition-all group">
-                    <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-accentBlue flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                    </div>
-                    <h3 class="font-outfit text-xl font-bold mb-3 text-white">Diseño Inmersivo</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        Interfaces modernas con efectos de profundidad y adaptabilidad total para cautivar visualmente a cualquier audiencia.
-                    </p>
-                </div>
-                <!-- Columna 3 -->
-                <div class="bg-cardBg border border-gray-800/80 p-8 rounded-3xl hover:border-purple-500/50 transition-all group">
-                    <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-accentPurple flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-lock"></i>
-                    </div>
-                    <h3 class="font-outfit text-xl font-bold mb-3 text-white">Protección y Auditoría</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        Enfoque riguroso en ciberseguridad, asegurando integridad, confidencialidad y control absoluto de los activos digitales.
-                    </p>
-                </div>
-            </div>
+        <div class="p-6">
+         <h3 class="font-bold text-xl text-sky-950">París, Francia</h3>
+         <p class="mt-2 text-sm text-slate-500">Disfruta de la Torre Eiffel, la alta cocina y museos icónicos.</p>
+         <div class="mt-4 flex items-center justify-between">
+          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Desde</span>
+          <span class="text-lg font-extrabold text-sky-600">$699 USD</span>
+         </div>
         </div>
-    </section>
+       </div>
+       <div class="p-6 pt-0">
+        <button type="button" data-destination="París" class="book-button w-full rounded-xl bg-sky-50 py-3 text-sm font-bold text-sky-700 transition hover:bg-sky-600 hover:text-white shadow-sm">Reservar este destino</button>
+       </div>
+      </article>
 
-    <!-- Sección de Contacto e Canales Directos -->
-    <section id="contacto" class="py-24 px-6 relative z-10">
-        <div class="max-w-3xl mx-auto bg-cardBg border border-gray-800 rounded-3xl p-8 md:p-12 shadow-2xl relative text-center">
-            <h2 class="font-outfit text-3xl font-bold mb-3">Conectemos Directamente</h2>
-            <p class="text-gray-400 text-sm mb-8">Inicia una comunicación inmediata a través de nuestros canales oficiales de mensajería instantánea.</p>
-            
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="https://wa.me/50700000000" target="_blank" class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-emerald-600/20 border border-emerald-500/30 text-emerald-400 font-semibold hover:bg-emerald-600/30 transition-all flex items-center justify-center space-x-3">
-                    <i class="fa-brands fa-whatsapp text-lg"></i>
-                    <span>WhatsApp (+507)</span>
-                </a>
-                <a href="https://t.me/usuario" target="_blank" class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-sky-600/20 border border-sky-500/30 text-sky-400 font-semibold hover:bg-sky-600/30 transition-all flex items-center justify-center space-x-3">
-                    <i class="fa-brands fa-telegram text-lg"></i>
-                    <span>Telegram Oficial</span>
-                </a>
-            </div>
+      <!-- Tokio -->
+      <article class="card-3d overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-xl shadow-slate-200/50 flex flex-col justify-between scroll-reveal" style="transition-delay: 100ms;">
+       <div>
+        <div class="h-60 overflow-hidden relative">
+         <img src="https://images.unsplash.com/photo-1503899036084-c55cdd92da26?q=80&w=800&auto=format&fit=crop" loading="lazy" alt="Tokio" class="h-full w-full object-cover transition duration-500 hover:scale-110">
+         <span class="absolute top-4 right-4 rounded-full bg-white/90 backdrop-blur-md px-3 py-1 text-xs font-bold text-sky-900 shadow">Asia</span>
         </div>
-    </section>
+        <div class="p-6">
+         <h3 class="font-bold text-xl text-sky-950">Tokio, Japón</h3>
+         <p class="mt-2 text-sm text-slate-500">Tradición milenaria combinada con tecnología y rascacielos futuristas.</p>
+         <div class="mt-4 flex items-center justify-between">
+          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Desde</span>
+          <span class="text-lg font-extrabold text-sky-600">$989 USD</span>
+         </div>
+        </div>
+       </div>
+       <div class="p-6 pt-0">
+        <button type="button" data-destination="Tokio" class="book-button w-full rounded-xl bg-sky-50 py-3 text-sm font-bold text-sky-700 transition hover:bg-sky-600 hover:text-white shadow-sm">Reservar este destino</button>
+       </div>
+      </article>
 
-    <!-- Footer -->
-    <footer class="py-12 border-t border-gray-800/80 text-center text-sm text-gray-500 relative z-10">
-        <p>&copy; 2026 OSCIDEC. Todos los derechos reservados.</p>
-    </footer>
+      <!-- Nueva York -->
+      <article class="card-3d overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-xl shadow-slate-200/50 flex flex-col justify-between scroll-reveal" style="transition-delay: 200ms;">
+       <div>
+        <div class="h-60 overflow-hidden relative">
+         <img src="https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?q=80&w=800&auto=format&fit=crop" loading="lazy" alt="Nueva York" class="h-full w-full object-cover transition duration-500 hover:scale-110">
+         <span class="absolute top-4 right-4 rounded-full bg-white/90 backdrop-blur-md px-3 py-1 text-xs font-bold text-sky-900 shadow">América</span>
+        </div>
+        <div class="p-6">
+         <h3 class="font-bold text-xl text-sky-950">Nueva York, EE.UU.</h3>
+         <p class="mt-2 text-sm text-slate-500">La ciudad que nunca duerme, Broadway, Central Park y mucho más.</p>
+         <div class="mt-4 flex items-center justify-between">
+          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Desde</span>
+          <span class="text-lg font-extrabold text-sky-600">$450 USD</span>
+         </div>
+        </div>
+       </div>
+       <div class="p-6 pt-0">
+        <button type="button" data-destination="Nueva York" class="book-button w-full rounded-xl bg-sky-50 py-3 text-sm font-bold text-sky-700 transition hover:bg-sky-600 hover:text-white shadow-sm">Reservar este destino</button>
+       </div>
+      </article>
 
-    <!-- Script de Interactividad 3D (Parallax con Mouse) -->
-    <script>
-        const card = document.getElementById('interactive-card');
+      <!-- Roma -->
+      <article class="card-3d overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-xl shadow-slate-200/50 flex flex-col justify-between scroll-reveal" style="transition-delay: 300ms;">
+       <div>
+        <div class="h-60 overflow-hidden relative">
+         <img src="https://images.unsplash.com/photo-1552832230-c0197dd311b5?q=80&w=800&auto=format&fit=crop" loading="lazy" alt="Roma" class="h-full w-full object-cover transition duration-500 hover:scale-110">
+         <span class="absolute top-4 right-4 rounded-full bg-white/90 backdrop-blur-md px-3 py-1 text-xs font-bold text-sky-900 shadow">Europa</span>
+        </div>
+        <div class="p-6">
+         <h3 class="font-bold text-xl text-sky-950">Roma, Italia</h3>
+         <p class="mt-2 text-sm text-slate-500">Camina entre historia imperial, arquitectura barroca y trattorias.</p>
+         <div class="mt-4 flex items-center justify-between">
+          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Desde</span>
+          <span class="text-lg font-extrabold text-sky-600">$590 USD</span>
+         </div>
+        </div>
+       </div>
+       <div class="p-6 pt-0">
+        <button type="button" data-destination="Roma" class="book-button w-full rounded-xl bg-sky-50 py-3 text-sm font-bold text-sky-700 transition hover:bg-sky-600 hover:text-white shadow-sm">Reservar este destino</button>
+       </div>
+      </article>
+     </div>
+    </div>
+   </section>
+
+   <!-- NUEVA SECCIÓN: EXPERIENCIAS Y TOURS VIP -->
+   <section id="experiencias" class="w-full bg-slate-950 py-24 text-white">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+     <div class="mx-auto max-w-2xl text-center scroll-reveal">
+      <p class="mb-3 text-sm font-bold uppercase tracking-[.18em] text-sky-400">Vívelo en persona</p>
+      <h2 class="display-font font-bold text-3xl sm:text-4xl text-white">Experiencias y Tours Exclusivos</h2>
+      <p class="mt-4 text-slate-400">Eleva tus vacaciones con actividades guiadas por expertos locales certificados.</p>
+     </div>
+
+     <div class="mt-16 grid gap-8 md:grid-cols-3 perspective-container">
+      <div class="card-3d rounded-3xl bg-slate-900 border border-slate-800 p-8 flex flex-col justify-between scroll-reveal">
+       <div>
+        <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-600/20 text-sky-400 mb-6">
+         <i data-lucide="compass" width="24" height="24"></i>
+        </span>
+        <h3 class="text-xl font-bold">Aventuras de Senderismo y Naturaleza</h3>
+        <p class="mt-3 text-slate-400 text-sm leading-relaxed">Rutas guiadas por parques nacionales de alta montaña, bosques tropicales y reservas protegidas con equipo completo incluido.</p>
+       </div>
+       <div class="mt-8 pt-6 border-t border-slate-800 flex items-center justify-between text-sm">
+        <span class="text-sky-400 font-semibold">Duración: 1 a 3 días</span>
+        <span class="font-bold text-white">Desde $120</span>
+       </div>
+      </div>
+
+      <div class="card-3d rounded-3xl bg-slate-900 border border-slate-800 p-8 flex flex-col justify-between scroll-reveal" style="transition-delay: 150ms;">
+       <div>
+        <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-600/20 text-sky-400 mb-6">
+         <i data-lucide="utensils" width="24" height="24"></i>
+        </span>
+        <h3 class="text-xl font-bold">Tour Gastronómico y Vinos</h3>
+        <p class="mt-3 text-slate-400 text-sm leading-relaxed">Degustaciones privadas en bodegas históricas y restaurantes con estrellas Michelin acompañados de chefs profesionales.</p>
+       </div>
+       <div class="mt-8 pt-6 border-t border-slate-800 flex items-center justify-between text-sm">
+        <span class="text-sky-400 font-semibold">Duración: Medio día</span>
+        <span class="font-bold text-white">From $95</span>
+       </div>
+      </div>
+
+      <div class="card-3d rounded-3xl bg-slate-900 border border-slate-800 p-8 flex flex-col justify-between scroll-reveal" style="transition-delay: 300ms;">
+       <div>
+        <span class="flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-600/20 text-sky-400 mb-6">
+         <i data-lucide="ship" width="24" height="24"></i>
+        </span>
+        <h3 class="text-xl font-bold">Cruceros y Travesías en Altamar</h3>
+        <p class="mt-3 text-slate-400 text-sm leading-relaxed">Navega por el Mediterráneo, el Caribe o los fiordos noruegos en embarcaciones de lujo con todo incluido a bordo.</p>
+       </div>
+       <div class="mt-8 pt-6 border-t border-slate-800 flex items-center justify-between text-sm">
+        <span class="text-sky-400 font-semibold">Duración: 7 días</span>
+        <span class="font-bold text-white">Desde $1,250</span>
+       </div>
+      </div>
+     </div>
+    </div>
+   </section>
+
+   <!-- NUEVA SECCIÓN: GUÍAS DE VIAJE Y CONSEJOS -->
+   <section id="guias" class="w-full bg-slate-50 py-24">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+     <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end scroll-reveal">
+      <div>
+       <p class="mb-3 text-sm font-bold uppercase tracking-[.18em] text-sky-600">Consejos de expertos</p>
+       <h2 class="display-font font-bold text-3xl sm:text-4xl text-sky-950">Guías de Viaje Esenciales</h2>
+      </div>
+      <p class="max-w-md text-slate-600 text-sm">Todo lo que necesitas saber antes de abordar tu avión para un viaje perfecto y sin contratiempos.</p>
+     </div>
+
+     <div class="mt-12 grid gap-8 md:grid-cols-3 perspective-container">
+      <article class="card-3d rounded-3xl bg-white border border-slate-200/80 p-7 shadow-sm hover:shadow-xl transition scroll-reveal">
+       <span class="inline-block rounded-lg bg-sky-100 text-sky-700 px-3 py-1 text-xs font-bold mb-4">Equipaje</span>
+       <h3 class="font-bold text-lg text-sky-950">Cómo empacar ligero para 2 semanas sin morir en el intento</h3>
+       <p class="mt-3 text-sm text-slate-600 leading-relaxed">Trucos profesionales de aerolíneas para optimizar espacio en tu equipaje de mano y evitar tarifas extra de peso.</p>
+      </article>
+
+      <article class="card-3d rounded-3xl bg-white border border-slate-200/80 p-7 shadow-sm hover:shadow-xl transition scroll-reveal" style="transition-delay: 150ms;">
+       <span class="inline-block rounded-lg bg-sky-100 text-sky-700 px-3 py-1 text-xs font-bold mb-4">Seguridad</span>
+       <h3 class="font-bold text-lg text-sky-950">Documentación digital: Apps indispensables para viajar al extranjero</h3>
+       <p class="mt-3 text-sm text-slate-600 leading-relaxed">Mantén respaldos seguros de tu pasaporte, pólizas de seguro médico y tarjetas de embarque en la nube de forma cifrada.</p>
+      </article>
+
+      <article class="card-3d rounded-3xl bg-white border border-slate-200/80 p-7 shadow-sm hover:shadow-xl transition scroll-reveal" style="transition-delay: 300ms;">
+       <span class="inline-block rounded-lg bg-sky-100 text-sky-700 px-3 py-1 text-xs font-bold mb-4">Finanzas</span>
+       <h3 class="font-bold text-lg text-sky-950">¿Efectivo o tarjeta? Guía de pagos y divisas internacionales</h3>
+       <p class="mt-3 text-sm text-slate-600 leading-relaxed">Evita comisiones bancarias abusivas al pagar en moneda extranjera y descubre los mejores métodos de cambio global.</p>
+      </article>
+     </div>
+    </div>
+   </section>
+
+   <!-- VENTAJAS / POR QUÉ ELEGIRNOS -->
+   <section id="promociones" class="w-full bg-white py-24 border-t border-slate-100">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+     <div class="mx-auto max-w-2xl text-center scroll-reveal">
+      <p class="mb-3 text-sm font-bold uppercase tracking-[.18em] text-sky-600">Compromiso total</p>
+      <h2 class="display-font font-bold text-3xl sm:text-4xl text-sky-950">¿Por qué viajar con SkyWings?</h2>
+     </div>
+     <div class="mt-16 grid gap-8 md:grid-cols-3 perspective-container">
+      <article class="card-3d rounded-3xl bg-slate-50 border border-slate-100 p-8 scroll-reveal">
+       <span class="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-100 text-sky-700 shadow-sm">
+        <i data-lucide="headphones" width="26" height="26"></i>
+       </span>
+       <h3 class="font-bold text-xl text-sky-950">Soporte Humano 24/7</h3>
+       <p class="mt-3 leading-relaxed text-slate-600 text-sm">Equipo de expertos disponible a cualquier hora por chat o llamada para solucionar emergencias o cambios de última hora en tu itinerario.</p>
+      </article>
+      <article class="card-3d rounded-3xl bg-slate-50 border border-slate-100 p-8 scroll-reveal" style="transition-delay: 150ms;">
+       <span class="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-100 text-sky-700 shadow-sm">
+        <i data-lucide="badge-dollar-sign" width="26" height="26"></i>
+       </span>
+       <h3 class="font-bold text-xl text-sky-950">Mejor Precio Garantizado</h3>
+       <p class="mt-3 leading-relaxed text-slate-600 text-sm">Si encuentras una tarifa más baja para el mismo vuelo en otra agencia digital, te igualamos el precio de inmediato y te regalamos crédito adicional.</p>
+      </article>
+      <article class="card-3d rounded-3xl bg-slate-50 border border-slate-100 p-8 scroll-reveal" style="transition-delay: 300ms;">
+       <span class="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-100 text-sky-700 shadow-sm">
+        <i data-lucide="shield-check" width="26" height="26"></i>
+       </span>
+       <h3 class="font-bold text-xl text-sky-950">Flexibilidad Absoluta</h3>
+       <p class="mt-3 leading-relaxed text-slate-600 text-sm">Políticas claras de cancelación y reprogramación sin penalizaciones ocultas en la mayoría de aerolíneas asociadas.</p>
+      </article>
+     </div>
+    </div>
+   </section>
+
+   <!-- SECCIÓN DE CONTACTO -->
+   <section id="contacto" class="w-full bg-slate-950 py-24 text-white">
+    <div class="mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-[1fr_1.1fr] lg:px-8 items-center">
+     <div class="scroll-reveal">
+      <p class="mb-4 text-sm font-bold uppercase tracking-[.18em] text-sky-400">Atención personalizada</p>
+      <h2 class="display-font font-bold text-3xl sm:text-4xl text-white">¿Diseñamos un itinerario a tu medida?</h2>
+      <p class="mt-5 max-w-lg text-lg leading-relaxed text-slate-300">Completa el formulario y un asesor de viajes especializado se comunicará contigo en menos de 2 horas.</p>
+      <div class="mt-8 flex items-center gap-4 text-sky-300">
+       <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-900/50">
+        <i data-lucide="mail" width="20" height="20"></i>
+       </span>
+       <span class="font-semibold text-base">soporte@skywingstravel.com</span>
+      </div>
+      <div class="mt-4 flex items-center gap-4 text-sky-300">
+       <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-900/50">
+        <i data-lucide="phone" width="20" height="20"></i>
+       </span>
+       <span class="font-semibold text-base">+507 830-SKYWING</span>
+      </div>
+     </div>
+
+     <form id="contact-form" class="rounded-3xl bg-slate-900 border border-slate-800 p-8 sm:p-10 shadow-2xl scroll-reveal">
+      <div class="grid gap-6">
+       <div>
+        <label class="mb-2 block text-sm font-bold text-slate-200" for="contact-name">Tu Nombre Completo</label>
+        <input id="contact-name" required type="text" autocomplete="name" class="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3.5 text-white focus:border-sky-500 font-medium" placeholder="Ej. Ana María Gómez">
+       </div>
+       <div>
+        <label class="mb-2 block text-sm font-bold text-slate-200" for="contact-email-input">Correo Electrónico</label>
+        <input id="contact-email-input" required type="email" autocomplete="email" class="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3.5 text-white focus:border-sky-500 font-medium" placeholder="tu@email.com">
+       </div>
+       <div>
+        <label class="mb-2 block text-sm font-bold text-slate-200" for="contact-message">Cuéntanos sobre tu viaje ideal</label>
+        <textarea id="contact-message" required rows="4" class="w-full resize-none rounded-xl border border-slate-700 bg-slate-950 px-4 py-3.5 text-white focus:border-sky-500 font-medium" placeholder="Destino, fechas estimadas, número de personas y preferencias..."></textarea>
+       </div>
+       <button id="contact-submit" type="submit" class="flex items-center justify-center gap-2 rounded-xl bg-sky-600 py-4 font-bold text-white shadow-lg shadow-sky-900/50 transition hover:bg-sky-500 hover:-translate-y-0.5">
+        <i data-lucide="send" width="18" height="18"></i>
+        <span>Enviar Solicitud de Viaje</span>
+       </button>
+       <p id="contact-status" class="hidden rounded-xl px-4 py-3 text-sm font-medium" role="status"></p>
+      </div>
+     </form>
+    </div>
+   </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="w-full bg-slate-950 py-12 text-slate-400 border-t border-slate-900">
+   <div class="mx-auto max-w-7xl px-5 lg:px-8">
+    <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 pb-12 border-b border-slate-900">
+     <div>
+      <div class="flex items-center gap-3">
+       <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-sky-600 text-white">
+        <i data-lucide="plane" width="18" height="18"></i>
+       </span>
+       <span class="font-bold text-white text-lg">SkyWings Travel</span>
+      </div>
+      <p class="mt-4 text-sm leading-relaxed text-slate-400">Tu agencia de confianza para descubrir el mundo con seguridad, diseño y la mejor tecnología de reservas.</p>
+     </div>
+     <div>
+      <h4 class="font-bold text-white text-sm uppercase tracking-wider mb-4">Enlaces rápidos</h4>
+      <ul class="space-y-2 text-sm">
+       <li><a href="#destinos" class="hover:text-sky-400 transition">Destinos Populares</a></li>
+       <li><a href="#vuelos" class="hover:text-sky-400 transition">Buscador de Vuelos</a></li>
+       <li><a href="#experiencias" class="hover:text-sky-400 transition">Tours y Experiencias</a></li>
+       <li><a href="#guias" class="hover:text-sky-400 transition">Guías de Viaje</a></li>
+      </ul>
+     </div>
+     <div>
+      <h4 class="font-bold text-white text-sm uppercase tracking-wider mb-4">Legal</h4>
+      <ul class="space-y-2 text-sm">
+       <li><a href="#" class="hover:text-sky-400 transition">Política de Privacidad</a></li>
+       <li><a href="#" class="hover:text-sky-400 transition">Términos y Condiciones</a></li>
+       <li><a href="#" class="hover:text-sky-400 transition">Política de Reembolso</a></li>
+      </ul>
+     </div>
+     <div>
+      <h4 class="font-bold text-white text-sm uppercase tracking-wider mb-4">Redes Sociales</h4>
+      <div class="flex items-center gap-3">
+       <a class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-900 text-slate-300 transition hover:bg-sky-600 hover:text-white" href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+        <i data-lucide="instagram" width="18" height="18"></i>
+       </a>
+       <a class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-900 text-slate-300 transition hover:bg-sky-600 hover:text-white" href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+        <i data-lucide="facebook" width="18" height="18"></i>
+       </a>
+       <a class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-900 text-slate-300 transition hover:bg-sky-600 hover:text-white" href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
+        <i data-lucide="twitter" width="18" height="18"></i>
+       </a>
+      </div>
+     </div>
+    </div>
+    <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
+     <p>© 2026 SkyWings Travel. Todos los derechos reservados.</p>
+     <p class="text-xs text-slate-500">Diseñado con alto rendimiento para arquitecturas web modernas.</p>
+    </div>
+   </div>
+  </footer>
+
+  <!-- SCRIPTS DE INTERACTIVIDAD -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      lucide.createIcons();
+
+      // Menú móvil
+      const menuToggle = document.getElementById("menu-toggle");
+      const mobileMenu = document.getElementById("mobile-menu");
+      menuToggle.addEventListener("click", () => {
+        const isOpen = !mobileMenu.classList.contains("hidden");
+        mobileMenu.classList.toggle("hidden", isOpen);
+        menuToggle.setAttribute("aria-expanded", String(!isOpen));
+      });
+
+      document.querySelectorAll("#mobile-menu a").forEach(link => {
+        link.addEventListener("click", () => {
+          mobileMenu.classList.add("hidden");
+          menuToggle.setAttribute("aria-expanded", "false");
+        });
+      });
+
+      // Animaciones de entrada al hacer Scroll (Efecto Framer Motion suave)
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("active");
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll(".scroll-reveal").forEach(el => observer.observe(el));
+
+      // Buscador de vuelos simulado
+      const flightForm = document.getElementById("flight-form");
+      const flightResult = document.getElementById("flight-result");
+      const flightError = document.getElementById("flight-error");
+      
+      flightForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const origin = document.getElementById("origin").value.trim();
+        const destination = document.getElementById("destination").value.trim();
+        const departure = document.getElementById("departure").value;
+        const returnDate = document.getElementById("return-date").value;
+        const passengers = document.getElementById("passengers").value;
+
+        flightError.classList.add("hidden");
+        flightResult.classList.add("hidden");
+
+        if (!origin || !destination || !departure || !returnDate) {
+          flightError.textContent = "Por favor completa todos los campos requeridos para la búsqueda.";
+          flightError.classList.remove("hidden");
+          return;
+        }
+        if (returnDate < departure) {
+          flightError.textContent = "La fecha de vuelta no puede ser anterior a la fecha de ida.";
+          flightError.classList.remove("hidden");
+          return;
+        }
+
+        const dateFormat = new Intl.DateTimeFormat("es-US", { day: "numeric", month: "short" });
+        const fromDate = dateFormat.format(new Date(departure + "T12:00:00"));
+        const toDate = dateFormat.format(new Date(returnDate + "T12:00:00"));
         
-        document.addEventListener('mousemove', (e) => {
-            const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
-            const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
-            
-            card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-        });
+        flightResult.textContent = `¡Búsqueda exitosa! ${passengers} analizados para la ruta ${origin} → ${destination} (${fromDate} - ${toDate}). Encontramos 6 aerolíneas operando con tarifas desde $450 USD.`;
+        flightResult.classList.remove("hidden");
+      });
 
-        document.addEventListener('mouseleave', () => {
-            card.style.transform = `rotateY(0deg) rotateX(0deg)`;
-            card.style.transition = 'transform 0.5s ease-in-out';
+      // Rellenar automáticamente el destino al hacer clic en reservar
+      document.querySelectorAll(".book-button").forEach(button => {
+        button.addEventListener("click", () => {
+          document.getElementById("destination").value = button.dataset.destination;
+          document.getElementById("vuelos").scrollIntoView({ behavior: "smooth", block: "center" });
+          document.getElementById("origin").focus();
         });
+      });
 
-        card.addEventListener('mouseenter', () => {
-            card.style.transition = 'none';
-        });
-    </script>
-</body>
+      // Formulario de contacto
+      const contactForm = document.getElementById("contact-form");
+      const contactStatus = document.getElementById("contact-status");
+      const contactSubmit = document.getElementById("contact-submit");
+
+      contactForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const name = document.getElementById("contact-name").value.trim();
+        const email = document.getElementById("contact-email-input").value.trim();
+        const message = document.getElementById("contact-message").value.trim();
+        
+        if (!name || !email || !message) return;
+
+        contactSubmit.disabled = true;
+        contactSubmit.classList.add("opacity-70", "cursor-wait");
+        contactStatus.textContent = "Enviando tu solicitud a nuestros asesores…";
+        contactStatus.className = "rounded-xl bg-sky-900/50 border border-sky-700 px-4 py-3 text-sm font-medium text-sky-200 block mt-3";
+
+        setTimeout(() => {
+          contactForm.reset();
+          contactStatus.textContent = "¡Solicitud enviada con éxito! Te contactaremos muy pronto por correo.";
+          contactStatus.className = "rounded-xl bg-emerald-950 border border-emerald-800 px-4 py-3 text-sm font-medium text-emerald-300 block mt-3";
+          contactSubmit.disabled = false;
+          contactSubmit.classList.remove("opacity-70", "cursor-wait");
+        }, 1200);
+      });
+    });
+  </script>
+ </body>
 </html>
