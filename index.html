@@ -1,547 +1,249 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OSCIDEC - Experiencias Inmersivas y Escalables</title>
-    
-    <!-- Fuentes y Iconos -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#030712',
+                        cardBg: '#111827',
+                        accentPurple: '#8b5cf6',
+                        accentBlue: '#3b82f6'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts Inter & Outfit -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Librería GSAP y ScrollTrigger para animaciones fluidas tipo Framer Motion -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-
+    
     <style>
-        /* ==========================================================
-           ESTILOS Y DISEÑO 3D / ANIMACIONES FLUIDAS
-           ========================================================== */
-        :root {
-            --bg-base: #030712;
-            --bg-surface: #0f172a;
-            --card-bg: rgba(255, 255, 255, 0.02);
-            --border-color: rgba(255, 255, 255, 0.07);
-            --primary: #6366f1;
-            --secondary: #a855f7;
-            --accent: #38bdf8;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --whatsapp: #25d366;
-            --telegram: #0088cc;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Outfit', sans-serif;
-            scroll-behavior: smooth;
-        }
-
         body {
-            background-color: var(--bg-base);
-            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            background-color: #030712;
+            color: #f3f4f6;
             overflow-x: hidden;
-            line-height: 1.7;
         }
-
-        /* Fondo dinámico con partículas visuales */
+        h1, h2, h3, .font-outfit {
+            font-family: 'Outfit', sans-serif;
+        }
+        /* Fondo con brillo difuso */
         .bg-glow {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            position: absolute;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.18) 0%, rgba(59, 130, 246, 0.06) 50%, transparent 70%);
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 0;
             pointer-events: none;
-            z-index: -1;
-            background: 
-                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 40%);
         }
-
-        /* --- NAVEGACIÓN --- */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 6%;
-            background: rgba(3, 7, 18, 0.8);
-            backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border-color);
-            z-index: 1000;
-        }
-
-        .logo {
-            font-size: 1.6rem;
-            font-weight: 800;
-            letter-spacing: 1px;
-            background: linear-gradient(135deg, #fff 0%, var(--primary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .nav-links {
-            list-style: none;
-            display: flex;
-            gap: 30px;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-muted);
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: #fff;
-        }
-
-        /* --- SECCIÓN HERO --- */
-        header.hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 160px 20px 80px 20px;
+        /* Contenedor 3D Perspective */
+        .perspective-container {
             perspective: 1200px;
         }
-
-        .hero h1 {
-            font-size: 4rem;
-            font-weight: 900;
-            max-width: 950px;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, #ffffff 0%, var(--text-muted) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            transform: translateZ(40px);
-        }
-
-        .hero p {
-            font-size: 1.25rem;
-            color: var(--text-muted);
-            max-width: 700px;
-            margin-bottom: 50px;
-            transform: translateZ(20px);
-        }
-
-        /* --- TARJETA 3D PRINCIPAL (INTERACTIVA) --- */
-        .card-3d-container {
-            perspective: 1200px;
-            width: 100%;
-            max-width: 650px;
-            margin: 0 auto;
-        }
-
         .card-3d {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 28px;
-            padding: 45px;
-            backdrop-filter: blur(24px);
-            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.7);
+            transition: transform 0.1s ease-out, box-shadow 0.3s ease;
             transform-style: preserve-3d;
-            transition: transform 0.1s ease, border-color 0.4s ease;
         }
-
-        .card-3d:hover {
-            border-color: rgba(99, 102, 241, 0.5);
+        /* Animación de entrada suave */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        .card-content {
-            transform: translateZ(50px);
-        }
-
-        .card-content h3 {
-            font-size: 1.8rem;
-            margin-bottom: 25px;
-            text-align: left;
-            color: #fff;
-        }
-
-        .contact-list {
-            list-style: none;
-            margin-bottom: 35px;
-            text-align: left;
-        }
-
-        .contact-list li {
-            margin-bottom: 16px;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            color: var(--text-muted);
-        }
-
-        .contact-list li i {
-            color: var(--primary);
-            font-size: 1.3rem;
-            width: 30px;
-            text-align: center;
-        }
-
-        .contact-list li span {
-            color: var(--text-main);
-            font-weight: 500;
-        }
-
-        /* Botones de acción directa con efectos de movimiento */
-        .btn-group {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            flex: 1;
-            min-width: 210px;
-            padding: 16px 24px;
-            border-radius: 14px;
-            font-weight: 600;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            font-size: 1rem;
-            color: #fff;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        }
-
-        .btn:hover {
-            transform: translateY(-5px) scale(1.02);
-        }
-
-        .btn-whatsapp {
-            background-color: var(--whatsapp);
-        }
-        .btn-whatsapp:hover {
-            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
-        }
-
-        .btn-telegram {
-            background-color: var(--telegram);
-        }
-        .btn-telegram:hover {
-            box-shadow: 0 8px 25px rgba(0, 136, 204, 0.4);
-        }
-
-        /* --- SECCIONES DE CONTENIDO MASIVO --- */
-        .section {
-            padding: 120px 8%;
-            max-width: 1300px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            text-align: center;
-            font-size: 3rem;
-            font-weight: 800;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, #fff 0%, var(--text-muted) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .section-subtitle {
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 1.2rem;
-            max-width: 650px;
-            margin: 0 auto 70px auto;
-        }
-
-        /* Grid de servicios avanzado */
-        .grid-features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-            gap: 35px;
-        }
-
-        .feature-card {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-color);
-            padding: 45px 35px;
-            border-radius: 24px;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), border-color 0.4s ease;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--primary);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-        }
-
-        .feature-card i {
-            font-size: 2.8rem;
-            color: var(--primary);
-            margin-bottom: 25px;
-            display: inline-block;
-        }
-
-        .feature-card h4 {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            font-weight: 700;
-        }
-
-        .feature-card p {
-            color: var(--text-muted);
-            line-height: 1.6;
-        }
-
-        /* --- SECCIÓN DE ESTADÍSTICAS --- */
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 30px;
-            margin-top: 80px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 50px;
-            border-radius: 24px;
-            backdrop-filter: blur(10px);
-            text-align: center;
-        }
-
-        .stat-item h3 {
-            font-size: 3rem;
-            font-weight: 900;
-            color: var(--accent);
-            margin-bottom: 10px;
-        }
-
-        .stat-item p {
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        /* --- PIE DE PÁGINA --- */
-        footer {
-            background: #010409;
-            border-top: 1px solid var(--border-color);
-            padding: 60px 8%;
-            text-align: center;
-            color: var(--text-muted);
-        }
-
-        footer .footer-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        footer h2 {
-            font-size: 2rem;
-            color: #fff;
-            margin-bottom: 15px;
-        }
-
-        footer p {
-            margin-bottom: 25px;
-        }
-
-        .footer-bottom {
-            margin-top: 40px;
-            padding-top: 25px;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            font-size: 0.95rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2.8rem; }
-            .section-title { font-size: 2.2rem; }
-            .nav-links { display: none; }
+        .animate-fade-in {
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
     </style>
 </head>
-<body>
+<body class="relative selection:bg-accentPurple selection:text-white">
 
+    <!-- Fondo con brillo difuso -->
     <div class="bg-glow"></div>
 
     <!-- Barra de Navegación -->
-    <nav>
-        <div class="logo">OSCIDEC</div>
-        <ul class="nav-links">
-            <li><a href="#inicio">Inicio</a></li>
-            <li><a href="#tecnologias">Tecnologías</a></li>
-            <li><a href="#metodologia">Escalabilidad</a></li>
-            <li><a href="#contacto">Contacto</a></li>
-        </ul>
+    <nav class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-darkBg/80 border-b border-gray-800/50">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-accentPurple to-accentBlue flex items-center justify-center shadow-lg shadow-purple-500/30">
+                    <i class="fa-solid fa-shield-halved text-white text-lg"></i>
+                </div>
+                <span class="font-outfit text-2xl font-bold tracking-tight bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">OSCIDEC</span>
+            </div>
+            <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-300">
+                <a href="#inicio" class="hover:text-accentPurple transition-colors">Inicio</a>
+                <a href="#ecosistema" class="hover:text-accentPurple transition-colors">Ecosistema</a>
+                <a href="#experiencia-3d" class="hover:text-accentPurple transition-colors">Laboratorio 3D</a>
+                <a href="#contacto" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-accentPurple to-accentBlue text-white font-semibold shadow-lg shadow-purple-600/20 hover:opacity-90 transition-opacity">Contacto Directo</a>
+            </div>
+        </div>
     </nav>
 
-    <!-- Sección Hero Principal -->
-    <header id="inicio" class="hero">
-        <h1>OSCIDEC</h1>
-        <p>Innovación, Ciberseguridad y Desarrollo Tecnológico 3D</p>
+    <!-- Hero Section con Parallax 3D -->
+    <section id="inicio" class="relative min-h-screen flex items-center justify-center pt-24 pb-16 px-6 z-10">
+        <div class="max-w-5xl mx-auto text-center animate-fade-in">
+            <div class="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-gray-900 border border-gray-800 text-xs text-purple-400 mb-6 shadow-inner">
+                <span class="w-2 h-2 rounded-full bg-accentPurple animate-pulse"></span>
+                <span>Tecnología, Innovación y Ciberseguridad Avanzada</span>
+            </div>
+            <h1 class="font-outfit text-5xl md:text-7xl font-extrabold tracking-tight mb-8 leading-tight">
+                Experiencias Inmersivas <br>
+                <span class="bg-gradient-to-r from-accentPurple via-indigo-400 to-accentBlue bg-clip-text text-transparent">Escalables y Seguras</span>
+            </h1>
+            <p class="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-10 font-light">
+                Diseños digitales de alto rendimiento con entornos tridimensionales interactivos diseñados para capturar la atención y enganchar a tu audiencia desde el primer instante.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#experiencia-3d" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-white text-darkBg font-bold hover:bg-gray-100 transition-all shadow-xl shadow-white/5 flex items-center justify-center space-x-3 group">
+                    <span>Probar Laboratorio 3D</span>
+                    <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                </a>
+                <a href="#contacto" class="w-full sm:w-auto px-8 py-4 rounded-xl bg-gray-900 border border-gray-800 text-white font-medium hover:bg-gray-800 transition-all">
+                    Iniciar Conversación
+                </a>
+            </div>
+        </div>
+    </section>
 
-        <!-- Tarjeta Interactiva 3D con Movimiento Dinámico -->
-        <div class="card-3d-container">
-            <div class="card-3d" id="mainCard">
-                <div class="card-content">
-                    <h3>Centro de Enlaces Oficiales</h3>
-                    <ul class="contact-list">
-                        <li>
-                            <i class="fa-solid fa-envelope"></i>
-                            <span>contacto@oscidec.com</span>
-                        </li>
-                        <li>
-                            <i class="fa-solid fa-phone"></i>
-                            <span>+507 67600882 (Panamá)</span>
-                        </li>
-                        <li>
-                            <i class="fa-solid fa-microchip"></i>
-                            <span>Arquitectura Web 3D Avanzada y de Alto Rendimiento</span>
-                        </li>
-                    </ul>
+    <!-- Sección Interactiva 3D con Mouse Tracking (Laboratorio 3D) -->
+    <section id="experiencia-3d" class="py-24 px-6 relative z-10">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="font-outfit text-3xl md:text-5xl font-bold mb-4">Interacción Tridimensional en Tiempo Real</h2>
+                <p class="text-gray-400 max-w-xl mx-auto">Desplaza el cursor sobre el módulo central para experimentar la perspectiva volumétrica dinámica.</p>
+            </div>
 
-                    <!-- Botones de WhatsApp y Telegram con prefijo internacional +507 -->
-                    <div class="btn-group">
-                        <a href="https://wa.me/50767600882?text=Hola,%20me%20interesa%20conocer%20más%20sobre%20sus%20servicios%20y%20desarrollos%20tecnológicos." target="_blank" class="btn btn-whatsapp">
-                            <i class="fa-brands fa-whatsapp fa-xl"></i> WhatsApp (+507)
-                        </a>
-                        <a href="https://t.me/67600882" target="_blank" class="btn btn-telegram">
-                            <i class="fa-brands fa-telegram fa-xl"></i> Telegram (+507)
-                        </a>
+            <div class="perspective-container flex justify-center">
+                <div id="interactive-card" class="card-3d w-full max-w-2xl bg-gradient-to-br from-cardBg to-gray-900 border border-gray-800/80 rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
+                    <!-- Resplandor interno animado -->
+                    <div class="absolute -right-20 -top-20 w-60 h-60 bg-purple-500/15 rounded-full blur-3xl pointer-events-none"></div>
+                    
+                    <div class="flex items-center justify-between mb-8">
+                        <div class="w-14 h-14 rounded-2xl bg-accentPurple/20 border border-accentPurple/30 flex items-center justify-center text-accentPurple text-2xl">
+                            <i class="fa-solid fa-cubes"></i>
+                        </div>
+                        <span class="text-xs font-mono uppercase tracking-widest text-gray-400 bg-gray-800/80 px-3 py-1.5 rounded-lg border border-gray-700/50">Módulo Parallax Activo</span>
+                    </div>
+
+                    <h3 class="font-outfit text-2xl md:text-3xl font-bold mb-4 text-white">Arquitectura Visual de Alto Impacto</h3>
+                    <p class="text-gray-400 text-sm md:text-base leading-relaxed mb-8">
+                        La combinación de estructuras visuales tridimensionales y transiciones fluidas incrementa de forma directa el tiempo de permanencia del usuario, transformando visitantes casuales en clientes comprometidos.
+                    </p>
+
+                    <div class="grid grid-cols-2 gap-4 border-t border-gray-800 pt-6">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-lg bg-purple-500/10 text-accentPurple flex items-center justify-center text-sm">
+                                <i class="fa-solid fa-gauge-high"></i>
+                            </div>
+                            <span class="text-sm font-medium text-gray-300">60 FPS Fluidos</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-accentBlue flex items-center justify-center text-sm">
+                                <i class="fa-solid fa-shield"></i>
+                            </div>
+                            <span class="text-sm font-medium text-gray-300">Seguridad Integrada</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </header>
-
-    <!-- Sección de Tecnologías y Contenido Extendido -->
-    <section id="tecnologias" class="section">
-        <h2 class="section-title">Ecosistema Tecnológico Avanzado</h2>
-        <p class="section-subtitle">Construido con HTML puro, diseño modular y animaciones inmersivas orientadas a la máxima conversión visual.</p>
-
-        <div class="grid-features">
-            <div class="feature-card">
-                <i class="fa-solid fa-code"></i>
-                <h4>Estructura Limpia & Modular</h4>
-                <p>Sin dependencias innecesarias pesadas. Diseñado para garantizar tiempos de respuesta ultra rápidos y un control total de la interfaz.</p>
-            </div>
-            <div class="feature-card">
-                <i class="fa-solid fa-cube"></i>
-                <h4>Efectos 3D Inmersivos</h4>
-                <p>Perspectivas tridimensionales impulsadas por hardware acelerado en CSS y lógica de interacción fluida que mantiene la atención de los usuarios.</p>
-            </div>
-            <div class="feature-card">
-                <i class="fa-solid fa-bolt"></i>
-                <h4>Animaciones Fluidas</h4>
-                <p>Transiciones dinámicas y microinteracciones inspiradas en estándares modernos de movimiento para dotar de vida a cada etiqueta y componente visual.</p>
-            </div>
-        </div>
-
-        <!-- Métricas de Escalabilidad -->
-        <div class="stats-container">
-            <div class="stat-item">
-                <h3>99.9%</h3>
-                <p>Estabilidad Visual</p>
-            </div>
-            <div class="stat-item">
-                <h3>0.1s</h3>
-                <p>Velocidad de Renderizado</p>
-            </div>
-            <div class="stat-item">
-                <h3>100%</h3>
-                <p>Interactividad 3D</p>
-            </div>
-        </div>
     </section>
 
-    <!-- Sección de Metodología y Escalabilidad -->
-    <section id="metodologia" class="section">
-        <h2 class="section-title">Diseñado para Escalar sin Límites</h2>
-        <p class="section-subtitle">La arquitectura permite añadir nuevas vistas, componentes o secciones de manera limpia a medida que tu proyecto crece.</p>
-
-        <div class="grid-features">
-            <div class="feature-card">
-                <i class="fa-solid fa-shield-halved"></i>
-                <h4>Rendimiento Óptimo</h4>
-                <p>Optimización rigurosa de recursos para asegurar una ejecución ligera y sin bloqueos en cualquier navegador moderno.</p>
+    <!-- Sección de Ecosistema Tecnológico -->
+    <section id="ecosistema" class="py-24 px-6 relative z-10 bg-gray-900/30 border-y border-gray-800/40">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="font-outfit text-3xl md:text-5xl font-bold mb-4">Ecosistema y Pilares</h2>
+                <p class="text-gray-400 max-w-xl mx-auto">Componentes clave que potencian la escalabilidad y el enganche de tu plataforma.</p>
             </div>
-            <div class="feature-card">
-                <i class="fa-solid fa-mobile-screen-button"></i>
-                <h4>Diseño Adaptativo (Responsive)</h4>
-                <p>Experiencia de usuario fluida y perfectamente alineada tanto en ordenadores de escritorio de alta gama como en dispositivos móviles y tabletas.</p>
-            </div>
-            <div class="feature-card">
-                <i class="fa-solid fa-comments"></i>
-                <h4>Canales de Conversión Directa</h4>
-                <p>Enlaces directos a mensajería instantánea configurados para eliminar fricción y conectar de inmediato a los prospectos con tus canales oficiales.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Pie de Página con Información de Contacto Final -->
-    <footer id="contacto">
-        <div class="footer-content">
-            <h2>¿Listo para llevar tu proyecto al siguiente nivel?</h2>
-            <p>Escríbenos directamente o conéctate con nosotros a través de nuestros canales oficiales en Panamá.</p>
             
-            <div class="btn-group" style="max-width: 500px; margin: 0 auto;">
-                <a href="https://wa.me/50767600882?text=Hola,%20me%20interesa%20conocer%20más%20sobre%20sus%20servicios%20y%20desarrollos%20tecnológicos." target="_blank" class="btn btn-whatsapp">
-                    <i class="fa-brands fa-whatsapp fa-xl"></i> WhatsApp (+507)
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Columna 1 -->
+                <div class="bg-cardBg border border-gray-800/80 p-8 rounded-3xl hover:border-accentPurple/50 transition-all group">
+                    <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-accentPurple flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-network-wired"></i>
+                    </div>
+                    <h3 class="font-outfit text-xl font-bold mb-3 text-white">Infraestructura Robusta</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Sistemas optimizados para garantizar alta disponibilidad, tiempos de respuesta mínimos y rendimiento constante.
+                    </p>
+                </div>
+                <!-- Columna 2 -->
+                <div class="bg-cardBg border border-gray-800/80 p-8 rounded-3xl hover:border-accentBlue/50 transition-all group">
+                    <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-accentBlue flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <h3 class="font-outfit text-xl font-bold mb-3 text-white">Diseño Inmersivo</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Interfaces modernas con efectos de profundidad y adaptabilidad total para cautivar visualmente a cualquier audiencia.
+                    </p>
+                </div>
+                <!-- Columna 3 -->
+                <div class="bg-cardBg border border-gray-800/80 p-8 rounded-3xl hover:border-purple-500/50 transition-all group">
+                    <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-accentPurple flex items-center justify-center text-xl mb-6 group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-lock"></i>
+                    </div>
+                    <h3 class="font-outfit text-xl font-bold mb-3 text-white">Protección y Auditoría</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Enfoque riguroso en ciberseguridad, asegurando integridad, confidencialidad y control absoluto de los activos digitales.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Contacto e Canales Directos -->
+    <section id="contacto" class="py-24 px-6 relative z-10">
+        <div class="max-w-3xl mx-auto bg-cardBg border border-gray-800 rounded-3xl p-8 md:p-12 shadow-2xl relative text-center">
+            <h2 class="font-outfit text-3xl font-bold mb-3">Conectemos Directamente</h2>
+            <p class="text-gray-400 text-sm mb-8">Inicia una comunicación inmediata a través de nuestros canales oficiales de mensajería instantánea.</p>
+            
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="https://wa.me/50700000000" target="_blank" class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-emerald-600/20 border border-emerald-500/30 text-emerald-400 font-semibold hover:bg-emerald-600/30 transition-all flex items-center justify-center space-x-3">
+                    <i class="fa-brands fa-whatsapp text-lg"></i>
+                    <span>WhatsApp (+507)</span>
                 </a>
-                <a href="https://t.me/67600882" target="_blank" class="btn btn-telegram">
-                    <i class="fa-brands fa-telegram fa-xl"></i> Telegram (+507)
+                <a href="https://t.me/usuario" target="_blank" class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-sky-600/20 border border-sky-500/30 text-sky-400 font-semibold hover:bg-sky-600/30 transition-all flex items-center justify-center space-x-3">
+                    <i class="fa-brands fa-telegram text-lg"></i>
+                    <span>Telegram Oficial</span>
                 </a>
             </div>
         </div>
+    </section>
 
-        <div class="footer-bottom">
-            <p>&copy; 2026 <strong>OSCIDEC</strong>. Todos los derechos reservados. Correo: contacto@oscidec.com</p>
-        </div>
+    <!-- Footer -->
+    <footer class="py-12 border-t border-gray-800/80 text-center text-sm text-gray-500 relative z-10">
+        <p>&copy; 2026 OSCIDEC. Todos los derechos reservados.</p>
     </footer>
 
-    <!-- JavaScript Avanzado: Efectos 3D del Mouse y Animaciones Dinámicas -->
+    <!-- Script de Interactividad 3D (Parallax con Mouse) -->
     <script>
-        // Efecto 3D Parallax para la tarjeta principal basado en el cursor
-        const card = document.getElementById('mainCard');
-
+        const card = document.getElementById('interactive-card');
+        
         document.addEventListener('mousemove', (e) => {
             const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
             const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
+            
             card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
         });
 
         document.addEventListener('mouseleave', () => {
             card.style.transform = `rotateY(0deg) rotateX(0deg)`;
-            card.style.transition = 'transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1)';
+            card.style.transition = 'transform 0.5s ease-in-out';
         });
 
         card.addEventListener('mouseenter', () => {
             card.style.transition = 'none';
-        });
-
-        // Animación de entrada fluida para las tarjetas de contenido al hacer scroll (Estilo Framer Motion)
-        gsap.registerPlugin(ScrollTrigger);
-
-        gsap.utils.toArray('.feature-card').forEach((cardElement, i) => {
-            gsap.from(cardElement, {
-                scrollTrigger: {
-                    trigger: cardElement,
-                    start: 'top 85%',
-                    toggleActions: 'play none none reverse'
-                },
-                y: 50,
-                opacity: 0,
-                duration: 0.8,
-                delay: i * 0.15,
-                ease: 'power3.out'
-            });
         });
     </script>
 </body>
