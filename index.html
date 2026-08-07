@@ -17,7 +17,6 @@
     .hero-wash { background: linear-gradient(105deg, rgba(3, 41, 66, .93) 0%, rgba(3, 105, 161, .75) 50%, rgba(2, 132, 199, .25) 100%); }
     .search-panel { box-shadow: 0 24px 65px rgba(3, 105, 161, .22); }
     
-    /* Efectos 3D y Framer-style transitions mejorados */
     .perspective-container { perspective: 1400px; }
     .card-3d { 
       transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s cubic-bezier(0.16, 1, 0.3, 1);
@@ -80,7 +79,7 @@
  </header>
 
  <main>
-  <!-- HERO & BUSCADOR 3D -->
+  <!-- HERO & BUSCADOR -->
   <section id="inicio" class="relative isolate flex min-h-[700px] items-center overflow-hidden py-16">
    <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=1920&auto=format&fit=crop" loading="lazy" alt="Avión volando sobre nubes" class="absolute inset-0 -z-20 h-full w-full object-cover saturate-75">
    <div class="hero-wash absolute inset-0 -z-10"></div>
@@ -94,7 +93,7 @@
      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-sky-100">Explora rutas exclusivas, cotiza vuelos al instante y vive experiencias inolvidables diseñadas con la máxima precisión.</p>
     </div>
 
-    <!-- Buscador interactivo -->
+    <!-- Buscador interactivo con redirección automática a Google Flights -->
     <div id="vuelos" class="search-panel scroll-reveal mt-12 rounded-3xl bg-white/95 backdrop-blur-xl p-5 sm:p-8 border border-white/50">
      <div class="mb-6 flex items-center gap-3">
       <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-sky-100 text-sky-700 shadow-inner">
@@ -102,22 +101,22 @@
       </span>
       <div>
        <h2 class="font-bold text-sky-950 text-xl">Buscador Inteligente de Vuelos</h2>
-       <p class="text-sm text-sky-700">Compara tarifas de cientos de aerolíneas en tiempo real</p>
+       <p class="text-sm text-sky-700">Consulta y compara rutas directamente en tiempo real</p>
       </div>
      </div>
      <form id="flight-form" class="grid gap-4 lg:grid-cols-[1.2fr_1.2fr_1fr_1fr_.9fr_auto] lg:items-end">
       <div>
-       <label class="mb-2 block text-sm font-bold text-sky-900" for="origin">Ciudad de Origen</label>
+       <label class="mb-2 block text-sm font-bold text-sky-900" for="origin">Ciudad u Origen</label>
        <div class="relative">
         <i data-lucide="map-pin" class="absolute left-3.5 top-3.5 text-sky-600" width="18" height="18"></i>
-        <input id="origin" required type="text" class="w-full rounded-xl border border-sky-200 bg-white py-3.5 pl-10 pr-3 text-sm text-sky-950 font-medium" placeholder="Ej. Ciudad de Panamá">
+        <input id="origin" required type="text" class="w-full rounded-xl border border-sky-200 bg-white py-3.5 pl-10 pr-3 text-sm text-sky-950 font-medium" placeholder="Ej. Tocumen (PTY)">
        </div>
       </div>
       <div>
        <label class="mb-2 block text-sm font-bold text-sky-900" for="destination">Destino Soñado</label>
        <div class="relative">
         <i data-lucide="navigation" class="absolute left-3.5 top-3.5 text-sky-600" width="18" height="18"></i>
-        <input id="destination" required type="text" class="w-full rounded-xl border border-sky-200 bg-white py-3.5 pl-10 pr-3 text-sm text-sky-950 font-medium" placeholder="¿A dónde quieres ir?">
+        <input id="destination" required type="text" class="w-full rounded-xl border border-sky-200 bg-white py-3.5 pl-10 pr-3 text-sm text-sky-950 font-medium" placeholder="Ej. Nueva York">
        </div>
       </div>
       <div>
@@ -131,15 +130,15 @@
       <div>
        <label class="mb-2 block text-sm font-bold text-sky-900" for="passengers">Pasajeros</label>
        <select id="passengers" class="w-full rounded-xl border border-sky-200 bg-white px-3 py-3.5 text-sm text-sky-950 font-medium">
-        <option>1 pasajero</option>
-        <option>2 pasajeros</option>
-        <option>3 pasajeros</option>
-        <option>4+ pasajeros</option>
+        <option value="1">1 pasajero</option>
+        <option value="2">2 pasajeros</option>
+        <option value="3">3 pasajeros</option>
+        <option value="4">4+ pasajeros</option>
        </select>
       </div>
       <button type="submit" class="flex h-[48px] items-center justify-center gap-2 rounded-xl bg-sky-600 px-6 font-bold text-white shadow-lg shadow-sky-600/30 transition hover:bg-sky-700 hover:-translate-y-0.5">
        <i data-lucide="plane-takeoff" width="18" height="18"></i>
-       <span>Buscar Vuelos</span>
+       <span>Buscar en Google</span>
       </button>
      </form>
      <div id="flight-result" class="mt-5 hidden rounded-xl border border-sky-200 bg-sky-50 px-4 py-3.5 text-sm text-sky-900 font-medium" role="status"></div>
@@ -148,7 +147,7 @@
    </div>
   </section>
 
-  <!-- SECCIÓN DE DESTINOS POPULARES (Tarjetas 3D) -->
+  <!-- SECCIÓN DE DESTINOS POPULARES -->
   <section id="destinos" class="w-full bg-white py-24">
    <div class="mx-auto max-w-7xl px-5 lg:px-8">
     <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end scroll-reveal">
@@ -247,7 +246,7 @@
    </div>
   </section>
 
-  <!-- SECCIÓN: EXPERIENCIAS Y TOURS VIP -->
+  <!-- EXPERIENCIAS -->
   <section id="experiencias" class="w-full bg-slate-950 py-24 text-white">
    <div class="mx-auto max-w-7xl px-5 lg:px-8">
     <div class="mx-auto max-w-2xl text-center scroll-reveal">
@@ -302,7 +301,7 @@
    </div>
   </section>
 
-  <!-- SECCIÓN: GUÍAS DE VIAJE Y CONSEJOS -->
+  <!-- GUÍAS DE VIAJE -->
   <section id="guias" class="w-full bg-slate-50 py-24">
    <div class="mx-auto max-w-7xl px-5 lg:px-8">
     <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end scroll-reveal">
@@ -335,7 +334,7 @@
    </div>
   </section>
 
-  <!-- VENTAJAS / POR QUÉ ELEGIRNOS -->
+  <!-- VENTAJAS -->
   <section id="promociones" class="w-full bg-white py-24 border-t border-slate-100">
    <div class="mx-auto max-w-7xl px-5 lg:px-8">
     <div class="mx-auto max-w-2xl text-center scroll-reveal">
@@ -498,7 +497,7 @@
 
    document.querySelectorAll(".scroll-reveal").forEach(el => observer.observe(el));
 
-   // Buscador de vuelos simulado
+   // Buscador de vuelos con integración real a Google Flights
    const flightForm = document.getElementById("flight-form");
    const flightResult = document.getElementById("flight-result");
    const flightError = document.getElementById("flight-error");
@@ -508,10 +507,11 @@
     flightError.classList.add("hidden");
     flightResult.classList.add("hidden");
 
-    const origin = document.getElementById("origin").value;
-    const destination = document.getElementById("destination").value;
+    const origin = document.getElementById("origin").value.trim();
+    const destination = document.getElementById("destination").value.trim();
     const departure = document.getElementById("departure").value;
     const returnDate = document.getElementById("return-date").value;
+    const passengers = document.getElementById("passengers").value;
 
     if (!origin || !destination || !departure || !returnDate) {
      flightError.textContent = "Por favor completa todos los campos del buscador de vuelos.";
@@ -519,8 +519,16 @@
      return;
     }
 
-    flightResult.innerHTML = `✈️ <strong>¡Búsqueda exitosa!</strong> Encontramos opciones para volar de <strong>${origin}</strong> a <strong>${destination}</strong> del ${departure} al ${returnDate} desde <strong>$485.00 USD</strong>.`;
+    // Construir la URL oficial de búsqueda de Google Flights
+    const googleFlightsUrl = `https://www.google.com/travel/flights?q=Vuelos+de+${encodeURIComponent(origin)}+a+${encodeURIComponent(destination)}+el+${departure}+hasta+${returnDate}`;
+
+    flightResult.innerHTML = `✈️ <strong>¡Búsqueda configurada correctamente!</strong> Redirigiendo a Google Flights para la ruta <strong>${origin} → ${destination}</strong> (${departure} al ${returnDate}, ${passengers} pasajero(s)). <br><a href="${googleFlightsUrl}" target="_blank" rel="noopener noreferrer" class="underline font-bold text-sky-700 mt-1 inline-block">Haz clic aquí si la pestaña no se abre automáticamente.</a>`;
     flightResult.classList.remove("hidden");
+
+    // Abrir automáticamente Google Flights en una pestaña nueva con los parámetros reales
+    setTimeout(() => {
+     window.open(googleFlightsUrl, '_blank');
+    }, 400);
    });
 
    // Botones de reserva rápida en tarjetas de destino
